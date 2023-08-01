@@ -7,6 +7,10 @@ import { DlcModule } from './dlc/dlc.module';
 import { ScreenshotModule } from './screenshots/screenshot.module';
 import { StoreModule } from './stores/store.module';
 import { GameDetailsModule } from './game-details/game-details.module';
+import { GenreModule } from './genres/genre.module';
+import { PlatformModule } from './platforms/platform.module';
+import { PublisherModule } from './publishers/publisher.module';
+import { TagModule } from './tags/tag.module';
 
 @Module({
   imports: [
@@ -16,6 +20,10 @@ import { GameDetailsModule } from './game-details/game-details.module';
     ScreenshotModule,
     StoreModule,
     GameDetailsModule,
+    GenreModule,
+    PlatformModule,
+    PublisherModule,
+    TagModule,
   ],
   controllers: [AppController],
   providers: [AppService],
