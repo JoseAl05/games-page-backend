@@ -9,6 +9,7 @@ export class GamesService {
   /* POSSIBLE PARAMETERS */
   /*
     search:string,
+    page:number,
     page_size:number,
     search_precise:string,
     platforms:string,
@@ -21,29 +22,37 @@ export class GamesService {
   async findAll(params: {
     search?: string;
     page_size: number;
-    platforms?: string;
+    page: number;
+    platform?: string;
     stores?: string;
-    genres?: string;
+    genre?: string;
     tags?: string;
     ordering?: string;
   }): Promise<GameProps[]> {
     const url = new URL(
       `https://api.rawg.io/api/games?key=${process.env.RAWG_API_KEY}`,
     );
-    if (params.search) {
+    if (params.search?.length !== 0) {
       url.searchParams.append('search', params.search);
     }
     if (params.page_size) {
       url.searchParams.append('page_size', params.page_size.toString());
+    } else {
+      url.searchParams.append('page_size', '10');
     }
-    if (params.platforms) {
-      url.searchParams.append('platforms', params.platforms);
+    if (params.page) {
+      url.searchParams.append('page', params.page.toString());
+    } else {
+      url.searchParams.append('page', '1');
+    }
+    if (params.platform?.length !== 0) {
+      url.searchParams.append('platforms', params.platform);
     }
     if (params.stores) {
       url.searchParams.append('stores', params.stores);
     }
-    if (params.genres) {
-      url.searchParams.append('genres', params.genres);
+    if (params.genre?.length !== 0) {
+      url.searchParams.append('genres', params.genre);
     }
     if (params.tags) {
       url.searchParams.append('tags', params.tags);
@@ -52,27 +61,19 @@ export class GamesService {
       url.searchParams.append('ordering', params.ordering);
     }
     console.log(url);
-    return;
-    // const response = await this.httpService.axiosRef
-    //   .get<GameProps[]>(
-    //     `https://api.rawg.io/api/games?key=${process.env.RAWG_API_KEY}&page_size=10&search=${search}`,
-    //   )
-    //   .then((res) => {
-    //     catchError((err) => {
-    //       throw new Error(err.message);
-    //     });
+    const response = await this.httpService.axiosRef
+      .get<GameProps[]>(url.toString())
+      .then((res) => {
+        catchError((err) => {
+          throw new Error(err.message);
+        });
 
-    //     if (res.status === 200) {
-    //       return res.data;
-    //     }
+        if (res.status === 200) {
+          return res.data;
+        }
 
-    //     throw new Error(`Error: ${res.statusText}`);
-    //   })
-    //   .catch((err) => {
-    //     console.log(err.message);
-    //     throw new Error(`Error: ${err.message}`);
-    //   });
-
-    // return response;
+        throw new Error(`Error: ${res.statusText}`);
+      });
+    return response;
   }
 }
